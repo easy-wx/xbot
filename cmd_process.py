@@ -2,8 +2,8 @@ import importlib
 
 from xbot import scene_dirs
 
-import auth
-from common import logger
+from .auth import UserPermissionHelper
+from .common import logger
 
 
 def help_msg(cmd=None, subcmd=None):
@@ -24,13 +24,13 @@ def handle_command(user_id, msg, chat_id=None):
     if not msg:
         return "Empty command"
 
-    if msg == 'help':
+    if msg == "help":
         return help_msg()
 
-    parts = msg.split(' ')
-    if len(parts) == 1 and parts[0] == 'help':
+    parts = msg.split(" ")
+    if len(parts) == 1 and parts[0] == "help":
         return help_msg()
-    if len(parts) == 2 and parts[0] == 'help':
+    if len(parts) == 2 and parts[0] == "help":
         return help_msg(parts[1])
 
     if len(parts) < 2:
