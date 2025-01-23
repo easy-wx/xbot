@@ -30,4 +30,4 @@ ENV PYTHONPATH=/data;/data/xbot
 WORKDIR /data
 
 # 设置容器启动时的默认命令
-CMD ["python3.13", "-m", "xbot.app"]
+CMD ["python3.13", "-m", "xbot.wecom_app"]
