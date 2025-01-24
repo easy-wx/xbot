@@ -4,7 +4,6 @@
 
 **目的就是为了减轻个人的重复工作负担，提高工作效率。**
 
-
 ## 使用方法
 
 这是一个简单的框架，你自己用ChatGPT可能半天也能搞出来。不过如果这些代码可以满足你的需求，你也可以拿去直接用。
@@ -13,6 +12,15 @@
 
 1. fork 本项目
 2. 修改 `config.py` 文件，填入企业微信的相关信息
+    - 场景模块文件所在目录：``scene_dirs``
+    - 特殊对话的前缀以及处理函数：``special_line_prefix``
+    - 企业微信相关信息
+3. 在 `services` 等 `scene_dirs` 指定的目录下添加你的服务模块代码
+4. 修改local.db，添加特殊的权限控制
+5. 运行 `PYTHONPATH=.. python -m xbot.wecom_app` 启动服务
+
+以上需要部署到服务器上，然后在企业微信后台配置回调地址，具体的部署和配置方式看这里：
+《[企业微信机器人回调服务](https://github.com/easy-wx/wecom-bot-svr?tab=readme-ov-file#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9B%9E%E8%B0%83%E6%9C%8D%E5%8A%A1)》
 
 ## 设计
 
