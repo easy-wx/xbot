@@ -5,13 +5,6 @@ from .cmd_process import handle_command
 from .common import logger
 
 
-def help_md():
-    return """### Help 列表
-- [给项目点赞](https://github.com/easy-wx/wecom-bot-svr)
-- 其他功能请自行开发
-"""
-
-
 def msg_handler(req_msg: ReqMsg, server: WecomBotServer):
     # @机器人 help 打印帮助信息
     if req_msg.msg_type == "text" and isinstance(req_msg, TextReqMsg):
@@ -38,24 +31,18 @@ def event_handler(req_msg):
 
 
 def main():
-    token = "xxx"  # 3个x
-    aes_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # 43个x
-    corp_id = ""
-    host = "0.0.0.0"
-    port = 5001
-    bot_key = "xxxxx"  # 机器人配置中的webhook key
+    from .config import wecom_token, wecom_aes_key, wecom_corp_id, wecom_bot_key, wecom_bot_name, wecom_svr_host, \
+        wecom_svr_port, wecom_svr_path
 
-    # 这里要跟机器人名字一样，用于切分群组聊天中的@消息
-    bot_name = "jasonzxpan-bot"
     server = WecomBotServer(
-        bot_name,
-        host,
-        port,
-        path="/wecom_bot",
-        token=token,
-        aes_key=aes_key,
-        corp_id=corp_id,
-        bot_key=bot_key,
+        wecom_bot_name,
+        wecom_svr_host,
+        wecom_svr_port,
+        path=wecom_svr_path,
+        token=wecom_token,
+        aes_key=wecom_aes_key,
+        corp_id=wecom_corp_id,
+        bot_key=wecom_bot_key,
     )
 
     server.set_message_handler(msg_handler)

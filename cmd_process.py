@@ -1,7 +1,6 @@
 import importlib
 
-from xbot import scene_dirs
-
+from .config import scene_dirs, special_line_prefix
 from .auth import UserPermissionHelper
 from .common import logger
 
@@ -23,6 +22,10 @@ def handle_command(user_id, msg, chat_id=None):
     """
     if not msg:
         return "Empty command"
+
+    for prefix, handle_func in special_line_prefix:
+        if msg.startswith(prefix):
+            return handle_func(user_id, msg[len(prefix):], chat_id)
 
     if msg == "help":
         return help_msg()
@@ -60,7 +63,7 @@ def handle_command(user_id, msg, chat_id=None):
 
     # 检查用户是否拥有权限
     if package != "public":
-        p_helper = auth.UserPermissionHelper()
+        p_helper = UserPermissionHelper()
         if not p_helper.check_user_permission(user_id, cmd, subcmd):
             return "Permission denied"
 
@@ -76,3 +79,4 @@ if __name__ == "__main__":
     print(handle_command("jasonzxpan", "act_demo setup arg1 arg2"))
     print(handle_command("demo", "act_demo setup arg1 arg2", "chat_id"))
     print(handle_command("demo", "pub_demo setup arg1 arg2", "chat_id"))
+    print(handle_command("demo", "@pub_demo setup arg1 arg2", "chat_id"))
