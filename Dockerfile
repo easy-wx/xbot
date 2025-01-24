@@ -24,7 +24,7 @@ RUN wget https://bootstrap.pypa.io/get-pip.py && python3.13 get-pip.py && \
 
 
 # 设置 PYTHONPATH 环境变量
-ENV PYTHONPATH=/data;/data/xbot
+ENV PYTHONPATH=/data/xbot
 
 # 设置工作目录
 WORKDIR /data
