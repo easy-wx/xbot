@@ -1,20 +1,31 @@
 from wecom_bot_svr import WecomBotServer, RspTextMsg, RspMarkdownMsg, ReqMsg
 from wecom_bot_svr.req_msg import TextReqMsg
 
-from .cmd_process import handle_command
-from .common import logger
+from cmd_process import handle_command
+from common import logger, File
 
 
 def msg_handler(req_msg: ReqMsg, server: WecomBotServer):
     # @机器人 help 打印帮助信息
     if req_msg.msg_type == "text" and isinstance(req_msg, TextReqMsg):
         try:
-            handle_command(req_msg.from_user, req_msg.content, req_msg.chat_id)
+            cmd_ret = handle_command(req_msg.from_user.en_name, req_msg.content.lstrip(), req_msg.chat_id)
+            if isinstance(cmd_ret, str):
+                ret = RspTextMsg()
+                ret.content = cmd_ret
+                return ret
+            elif isinstance(cmd_ret, File):
+                send_ret = server.send_file(req_msg.chat_id, cmd_ret.file_path)
+                logger.info(f"send file ret: {send_ret}")
+                ret = RspTextMsg()
+                return ret
+            return RspTextMsg()
+
         except Exception as e:
             logger.error(f"Error: {e}")
             ret = RspTextMsg()
             ret.content = f"Error: {e}"
-            return RspTextMsg()
+            return ret
     else:
         ret = RspTextMsg()
         ret.content = f"暂不支持的消息类型，msg_type: {req_msg.msg_type}"
@@ -31,7 +42,7 @@ def event_handler(req_msg):
 
 
 def main():
-    from .config import wecom_token, wecom_aes_key, wecom_corp_id, wecom_bot_key, wecom_bot_name, wecom_svr_host, \
+    from config import wecom_token, wecom_aes_key, wecom_corp_id, wecom_bot_key, wecom_bot_name, wecom_svr_host, \
         wecom_svr_port, wecom_svr_path
 
     server = WecomBotServer(
@@ -44,6 +55,7 @@ def main():
         corp_id=wecom_corp_id,
         bot_key=wecom_bot_key,
     )
+    logger.info(f"Server started at {wecom_svr_host}:{wecom_svr_port}{wecom_svr_path}")
 
     server.set_message_handler(msg_handler)
     server.set_event_handler(event_handler)

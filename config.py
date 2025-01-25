@@ -1,5 +1,5 @@
 # 场景ID
-from .spec_line_proc_funcs import at_proc
+from spec_line_proc_funcs import at_proc
 
 # 场景分布的目录，按照顺序来搜索命令处理模块
 scene_dirs = ["services", "activities", "public"]

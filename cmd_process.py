@@ -1,8 +1,8 @@
 import importlib
 
-from .config import scene_dirs, special_line_prefix
-from .auth import UserPermissionHelper
-from .common import logger
+from config import scene_dirs, special_line_prefix
+from auth import UserPermissionHelper
+from common import logger, File
 
 
 def help_msg(cmd=None, subcmd=None):
@@ -12,7 +12,7 @@ def help_msg(cmd=None, subcmd=None):
     return "Help message"
 
 
-def handle_command(user_id, msg, chat_id=None):
+def handle_command(user_id, msg, chat_id=None) -> str | File:
     """
     处理命令
     :param user_id
@@ -22,6 +22,8 @@ def handle_command(user_id, msg, chat_id=None):
     """
     if not msg:
         return "Empty command"
+
+    logger.info(f"User[{user_id}] send message: {msg}")
 
     for prefix, handle_func in special_line_prefix:
         if msg.startswith(prefix):
@@ -42,6 +44,7 @@ def handle_command(user_id, msg, chat_id=None):
     cmd = parts[0]
     subcmd = parts[1]
     args = parts[2:]
+    logger.info(f"User[{user_id}], cmd: {cmd}, subcmd: {subcmd}, args: {args}")
 
     if cmd == "help":
         return help_msg(subcmd, args[0])
@@ -51,13 +54,17 @@ def handle_command(user_id, msg, chat_id=None):
     package = None
     for package in scene_dirs:
         try:
-            module = importlib.import_module(f"{package}.{cmd}")
+            module_name = f"{package}.{cmd}"
+            module = importlib.import_module(module_name)
             func_name = f"cmd_{subcmd}"
             if hasattr(module, func_name):
                 func = getattr(module, func_name)
                 break
-        except ImportError:
+        except ImportError as e:
+            logger.error(f"Error: import error, {e}")
             continue
+        except Exception as e:
+            logger.error(f"Error: {e}")
     if func is None:
         return "Unknown command"
 
