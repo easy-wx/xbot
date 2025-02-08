@@ -110,8 +110,10 @@ docker build --network="host" -t jasonzxpan/xbot .
 如果在当前目录运行，可以直接将目录映射到 /data/xbot：
 
 ```bash
-docker run -i -v $PWD:/data/xbot -t jasonzxpan/xbot /bin/bash
+docker run -i -v $PWD:/data/xbot -p 5001:5001 -t jasonzxpan/xbot
 ```
+
+![docker_deploy](images/docker_deploy.png)
 
 ## 4. 真实场景举例
 
