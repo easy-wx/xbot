@@ -8,7 +8,7 @@
 
 这是一个简单的框架，你自己用ChatGPT可能半天也能搞出来。不过如果这些代码可以满足你的需求，你也可以拿去直接用。
 
-用法很简单:
+### 1.1 用法
 
 1. fork 本项目
 2. 修改 `config.py` 文件，填入企业微信的相关信息
@@ -16,11 +16,21 @@
     - 特殊对话的前缀以及处理函数：``special_line_prefix``
     - 企业微信相关信息
 3. 在 `services` 等 `scene_dirs` 指定的目录下添加你的服务模块代码
-4. 修改local.db，添加特殊的权限控制
+4. 修改local.db，添加特殊的权限控制，**将你的企业微信ID添加到数据库中**
 5. 运行 `PYTHONPATH=.. python -m xbot.wecom_app` 启动服务
 
 以上需要部署到服务器上，然后在企业微信后台配置回调地址，具体的部署和配置方式看这里：
 《[企业微信机器人回调服务](https://github.com/easy-wx/wecom-bot-svr?tab=readme-ov-file#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9B%9E%E8%B0%83%E6%9C%8D%E5%8A%A1)》
+
+### 1.2 测试指令
+
+作为基础项目，这里有提供一些测试指令，可以用来测试是否能够正常运行。
+
+- ``help``，列出所有的命令
+- ``chat_id``，返回对话的 chat_id
+- ``act_demo setup arg1 arg2``，这个是活动的接口，调用 activities 目录下的模块
+- ``pub_demo setup arg1 arg2``，这个是公共的接口，调用 public 目录下的模块
+- ``@介绍一下北京``，这个是特殊指令，用来测试特殊指令的处理，未实现，但是有返回提示
 
 ## 2. 设计
 
@@ -53,6 +63,11 @@
 @介绍一下北京
 ```
 
+
+因为是需要指定处理模块，也可以放到别的目录中。
+建议放到 spec_line_proc_funcs 中，比如示例中的 `@`
+处理模块在 [spec_line_proc_funcs/at_proc.py](spec_line_proc_funcs/at_proc.py) 中。
+
 ### 2.3 对话服务适配与消息处理的分离
 
 设计上，独立消息处理和服务处理：消息处理负责解析消息，服务处理负责处理业务逻辑。
@@ -79,7 +94,9 @@
 
 不使用流水线，直接推送Docker镜像，注意将仓库设置为私有。
 
-构建：
+本仓库中提供的Dockerfile可以用于构建基础镜像，提供一个可以运行的环境。
+
+### 3.1 构建
 
 ```bash
 docker build --network="host" -t jasonzxpan/xbot .
@@ -92,3 +109,6 @@ docker run -i -v $PWD:/data/xbot -t jasonzxpan/xbot /bin/bash
 ```
 
 ## 4. 真实场景举例
+
+### 4.1 统计一些信息
+

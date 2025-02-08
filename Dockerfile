@@ -19,7 +19,7 @@ RUN apt-get update && \
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3.13 get-pip.py && \
     pip3.13 install --upgrade pip && \
     pip3.13 install --ignore-installed blinker && \
-    pip3.13 install wecom-bot-svr==0.3.2 requests && \
+    pip3.13 install wecom-bot-svr==0.3.3 requests && \
     rm get-pip.py
 
 # 设置 PYTHONPATH 环境变量
