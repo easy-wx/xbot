@@ -2,7 +2,7 @@ import importlib
 
 from config import scene_dirs, special_line_prefix
 from auth import UserPermissionHelper
-from common import logger, File
+from common import logger, XBotMsg
 
 
 def help_msg(cmd=None, subcmd=None):
@@ -12,7 +12,7 @@ def help_msg(cmd=None, subcmd=None):
     return "Help message"
 
 
-def handle_command(user_id, msg, chat_id=None) -> str | File:
+def handle_command(user_id, msg) -> str | XBotMsg:
     """
     处理命令
     :param user_id
@@ -27,7 +27,10 @@ def handle_command(user_id, msg, chat_id=None) -> str | File:
 
     for prefix, handle_func in special_line_prefix:
         if msg.startswith(prefix):
-            return handle_func(user_id, msg[len(prefix):], chat_id)
+            p_helper = UserPermissionHelper()
+            if not p_helper.check_user_permission(user_id, prefix, ""):
+                return "Permission denied"
+            return handle_func(user_id, msg[len(prefix):])
 
     if msg == "help":
         return help_msg()
@@ -75,15 +78,12 @@ def handle_command(user_id, msg, chat_id=None) -> str | File:
             return "Permission denied"
 
     logger.info(f"User[{user_id}] execute command: {cmd} {subcmd} {args}")
-    try:
-        return func(*args, chat_id=chat_id)
-    except TypeError:
-        return func(*args)
+    return func(*args)
 
 
 # Example usage
 if __name__ == "__main__":
     print(handle_command("jasonzxpan", "act_demo setup arg1 arg2"))
-    print(handle_command("demo", "act_demo setup arg1 arg2", "chat_id"))
-    print(handle_command("demo", "pub_demo setup arg1 arg2", "chat_id"))
-    print(handle_command("demo", "@pub_demo setup arg1 arg2", "chat_id"))
+    print(handle_command("demo", "act_demo setup arg1 arg2"))
+    print(handle_command("demo", "pub_demo setup arg1 arg2"))
+    print(handle_command("demo", "@pub_demo setup arg1 arg2"))

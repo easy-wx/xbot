@@ -15,6 +15,7 @@ class SingletonLogger:
 
     @staticmethod
     def _setup_logger(name, log_file, level):
+        print(f"Setting up logger {name} with log file {log_file} and level {level}")
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
         handler = logging.FileHandler(log_file)

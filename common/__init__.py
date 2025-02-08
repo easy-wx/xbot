@@ -1,4 +1,4 @@
 from .logger import logger
-from .datastructs import File_ as File
+from .datastructs import FileMsg, MarkdownMsg, XBotMsg
 
-__all__ = ['logger', 'File']
+__all__ = ['logger', 'FileMsg', 'MarkdownMsg', 'XBotMsg']

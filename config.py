@@ -5,7 +5,7 @@ from spec_line_proc_funcs import hash_proc
 scene_dirs = ["services", "activities", "public"]
 
 # 特殊处理函数
-special_line_prefix = [("@", hash_proc.handle_command)]
+special_line_prefix = [("#", hash_proc.handle_command)]
 
 # 企业微信配置
 wecom_token = "xxx"  # 3个x
