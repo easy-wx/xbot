@@ -1,11 +1,11 @@
 # 场景ID
-from spec_line_proc_funcs import at_proc
+from spec_line_proc_funcs import hash_proc
 
 # 场景分布的目录，按照顺序来搜索命令处理模块
 scene_dirs = ["services", "activities", "public"]
 
 # 特殊处理函数
-special_line_prefix = [("@", at_proc.handle_command)]
+special_line_prefix = [("@", hash_proc.handle_command)]
 
 # 企业微信配置
 wecom_token = "xxx"  # 3个x
