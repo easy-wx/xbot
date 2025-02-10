@@ -22,6 +22,7 @@ class UserPermission:
                 self.cmd = cmd_
                 self.subcmd = subcmd_
                 self.valid_until = valid_until_
+
         self.lines.append(PermissionLine(cmd, subcmd, valid_until))
 
     def __str__(self):
@@ -79,4 +80,3 @@ class PermissionOp:
         for row in cursor.fetchall():
             ret.add_line(row[2], row[3], row[4])
         return ret
-
