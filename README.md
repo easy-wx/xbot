@@ -1,10 +1,10 @@
-`xbot`是一个基于企业微信的机器人封装的**命令消息处理框架** ，用于通过企业微信接收用户的指令，**或触发任务，或查询信息**。
+[XBot](https://github.com/easy-wx/xbot>) 是一个基于企业微信的机器人封装的**命令消息处理框架** ，用于**通过企业微信接收用户的指令，或触发任务，或查询信息**。
 
-**目的就是为了减轻个人的重复工作负担，提高工作效率。也能让工作伙伴感受到你的专业性。**
+**目的就是为了减轻个人的重复工作负担，提高工作效率。同时，也能让工作伙伴感受到你的专业性。**
 
 ![all cases](images/cases_commented.png)
 
-本项目可以看作[wecom_bot_svr](https://github.com/easy-wx/wecom-bot-svr)的应用，封装的功能和特点包括：
+本项目可以看作 [wecom_bot_svr](https://github.com/easy-wx/wecom-bot-svr) 的应用，封装的功能和特点包括：
 
 - 规范对话格式，方便扩展。调用格式：``[scene] [cmd] [args]``
 - 支持**特殊字符开头的指令**，用于特殊处理。如``#介绍一下北京``
@@ -17,11 +17,13 @@
 
 ## 1. 使用方法
 
-这是一个简单的框架，你自己用ChatGPT可能半天也能搞出来。不过如果这些代码可以满足你的需求，你也可以拿去直接用。
+项目仓库地址：<https://github.com/easy-wx/xbot>
 
-### 1.1 用法
+根据下边的步骤，你可以快速搭建部署你自己的机器人助手。
 
-1. fork 本项目
+### 1.1 修改与部署
+
+1. git fork 或者 clone 本项目
 2. 修改 `config.py` 文件，填入企业微信的相关信息
     - 场景模块文件所在目录：``scene_dirs``
     - 特殊对话的前缀以及处理函数：``special_line_prefix``
@@ -30,10 +32,9 @@
 4. 修改local.db，添加特殊的权限控制，**将你的企业微信ID添加到数据库中**
 5. 运行 `PYTHONPATH=.. python -m xbot.wecom_app` 启动服务
 
-以上需要部署到服务器上，然后在企业微信后台配置回调地址，具体的部署和配置方式看这里：
-《[企业微信机器人回调服务](https://github.com/easy-wx/wecom-bot-svr?tab=readme-ov-file#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9B%9E%E8%B0%83%E6%9C%8D%E5%8A%A1)》
+以上需要部署到服务器上，然后在企业微信后台配置回调地址，具体的部署和配置方式详见《[企业微信机器人回调服务](https://github.com/easy-wx/wecom-bot-svr?tab=readme-ov-file#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9B%9E%E8%B0%83%E6%9C%8D%E5%8A%A1)》。
 
-### 1.2 测试指令
+### 1.2 指令测试
 
 作为基础项目，这里有提供一些测试指令，可以用来测试是否能够正常运行。
 
@@ -41,7 +42,7 @@
 - ``chat_id``，返回对话的 chat_id
 - ``act_demo setup arg1 arg2``，这个是活动的接口，调用 activities 目录下的模块
 - ``pub_demo setup arg1 arg2``，这个是公共的接口，调用 public 目录下的模块
-- ``#介绍一下北京``，这个是特殊指令，用来测试特殊指令的处理，未实现，但是有返回提示
+- ``#介绍一下北京``，这个是特殊指令，用来测试特殊指令的处理，有返回提示，需自己实现
 
 ## 2. 设计
 
@@ -73,8 +74,8 @@
 ![hash_proc.png](images/hash_proc.png)
 
 因为是需要指定处理模块，也可以放到别的目录中。
-建议放到 spec_line_proc_funcs 中，比如示例中的 `#`，
-处理模块在 [spec_line_proc_funcs/hash_proc.py](spec_line_proc_funcs/hash_proc.py) 中。
+
+建议放到 spec_line_proc_funcs 中，比如示例中的 `#`，处理模块在 [spec_line_proc_funcs/hash_proc.py](spec_line_proc_funcs/hash_proc.py) 中。
 
 ### 2.3 对话服务适配与消息处理的分离
 
@@ -86,14 +87,13 @@
 
 因为企业微信能够获得用户ID，所以通过 scene + cmd + 日期的方式，对用户进行授权。
 
-本地有 ``db.sqlite3``文件进行管理。
-只有授权用户才能进行对话，否则提示错误。
+本地有 ``db.sqlite3``文件进行管理。只有授权用户才能进行对话，否则提示错误。
 
 ![permissions.png](images/permissions.png)
 
 **你也可以简单修改一下 auth.py 文件中的 ``PermissionOp`` 类，实现使用 MySQL 或者其他数据库进行权限管理。**
 
-如果使用SQLite管理权限，可以通过更新镜像的方式进行同步。
+如果使用SQLite管理权限，可以通过*更新镜像*的方式进行同步。
 
 ### 2.5 HELP 指令
 
@@ -128,9 +128,9 @@ cmd_ret = sync_async_proc.SyncAsyncRspProcessor(task, timeout=2, complete_cb=cb,
 
 ## 3. Docker 部署
 
-不使用流水线，直接推送Docker镜像，注意将仓库设置为私有。
+不使用流水线，直接推送 Docker 镜像，注意将仓库设置为私有。
 
-本仓库中提供的Dockerfile可以用于构建基础镜像，提供一个可以运行的环境。
+本仓库中提供的 Dockerfile 可以用于构建基础镜像，提供一个可以运行的环境。
 
 ### 3.1 构建
 
