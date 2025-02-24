@@ -45,7 +45,7 @@ def msg_handler(req_msg: ReqMsg, server: WecomBotServer):
                 elif isinstance(cmd_ret, MarkdownMsg):
                     ret = RspMarkdownMsg()
                     ret.content = cmd_ret.content
-                    return cmd_ret
+                    return ret
                 elif isinstance(cmd_ret, FileMsg):
                     send_ret = server.send_file(req_msg.chat_id, cmd_ret.file_path)
                     logger.info(f"send file ret: {send_ret}")
