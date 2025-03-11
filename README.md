@@ -126,6 +126,10 @@ cmd_ret = sync_async_proc.SyncAsyncRspProcessor(task, timeout=2, complete_cb=cb,
                                                 fail_cb=fail_cb).get_result()
 ```
 
+为了更方便的演示这个功能，我借助特殊#处理函数，演示立马返回、3秒返回、7秒返回的情况(代码已更新[hash_proc.py](spec_line_proc_funcs/hash_proc.py))。
+
+![long-time-proc.png](images/long-time-proc.png)
+
 ## 3. Docker 部署
 
 不使用流水线，直接推送 Docker 镜像，注意将仓库设置为私有。
