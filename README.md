@@ -50,7 +50,7 @@
 
 ### 2.1 通用对话格式
 
-对话遵循以下格式：
+简单对话遵循以下格式：
 
 ``[scene] [cmd] [args]``
 
@@ -66,6 +66,26 @@
 有一个特殊的目录——``public``，用来存放不敏感的公用接口。
 
 ``common`` 目录则用来存放公共的函数和类。
+
+---
+
+2025-08-04 更新，支持了多行分割需求
+
+```
+[scene] [cmd] [args]
+remaining_arg_n
+```
+
+比如我们有一个批量设置用户初始标签的指令，可以是如下对话：
+
+```
+smoba set_tag init
+user1 tag1
+user2 tag2
+user3 tag3
+```
+
+这样，我们的函数 ``smoba_set_tag`` 需要接收两个参数 ``arg1 = "init"，arg2 = "user1 tag1\nuser2 tag2\nuser3 tag3"``。
 
 ### 2.2 内部对话格式
 

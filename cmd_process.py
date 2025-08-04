@@ -35,7 +35,11 @@ def handle_command(user_id, msg) -> str | XBotMsg:
     if msg == "help":
         return help_msg()
 
-    parts = msg.split(" ")
+    if msg.find("\n") != -1:
+        cmd_line, remaining = msg.split("\n", 1)
+        parts = cmd_line.split(" ") + [remaining]
+    else:
+        parts = msg.split(" ")
     if len(parts) == 1 and parts[0] == "help":
         return help_msg()
     if len(parts) == 2 and parts[0] == "help":
@@ -62,7 +66,10 @@ def handle_command(user_id, msg) -> str | XBotMsg:
             func_name = f"cmd_{subcmd}"
             if hasattr(module, func_name):
                 func = getattr(module, func_name)
+                logger.info(f"Found command: {cmd} {subcmd}, module: {module_name}, function: {func_name}")
                 break
+            else:
+                logger.info(f"Command not found: {cmd} {subcmd}, module: {module_name}")
         except ImportError as e:
             logger.error(f"Error: import error, {e}")
             continue
@@ -78,7 +85,10 @@ def handle_command(user_id, msg) -> str | XBotMsg:
             return "Permission denied"
 
     logger.info(f"User[{user_id}] execute command: {cmd} {subcmd} {args}")
-    return func(*args)
+    try:
+        return func(*args)
+    except TypeError:
+        return func(args)
 
 
 # Example usage
